@@ -1,211 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="ro">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Foxy Host Panel</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+  Pune acest fișier ca index.html în repository-ul tău.
+  Apoi activezi GitHub Pages din Settings, branch main, root.
+-->
 <style>
-/* Layout */
-:root { --bg: #0b0b0b; --panel: #000; --accent: #0f0; --muted: #3a3a3a; }
-html,body { height: 100%; margin: 0; font-family: monospace; background: var(--bg); color: var(--accent); }
-.app { display: flex; height: 100vh; }
-.sidebar { width: 300px; background: var(--panel); border-right: 1px solid var(--accent); padding: 12px; box-sizing: border-box; overflow-y: auto; }
-.brand { font-size: 20px; margin-bottom: 12px; }
-.section { margin-top: 10px; }
-.sectionTitle { cursor: pointer; padding: 6px 4px; font-weight: bold; }
-.list { margin-left: 8px; display: none; }
-.item { padding: 6px 4px; cursor: pointer; }
-.item:hover { text-decoration: underline; }
-.badge { font-size: 12px; color: var(--muted); }
-.content { flex: 1; display: flex; flex-direction: column; padding: 12px; box-sizing: border-box; overflow: hidden; }
-.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.controls { display: flex; gap: 8px; align-items: center; }
-.btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 6px 10px; cursor: pointer; }
-.main { display: flex; gap: 12px; height: calc(100% - 56px); overflow: hidden; }
-.leftCol { width: 55%; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-.rightCol { flex: 1; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-.panel { background: var(--panel); border: 1px solid var(--accent); padding: 10px; box-sizing: border-box; overflow: auto; }
-.console { height: 260px; background: #000; padding: 8px; overflow-y: auto; border: 1px solid var(--accent); }
-.input { width: 100%; padding: 8px; background: #000; color: var(--accent); border: 1px solid var(--accent); box-sizing: border-box; }
-.fileView { white-space: pre-wrap; min-height: 220px; background: #000; border: 1px solid var(--accent); padding: 8px; overflow: auto; }
-.editor { height: 300px; background: #000; border: 1px solid var(--accent); padding: 8px; color: var(--accent); overflow: auto; }
-.small { font-size: 13px; }
-.row { display: flex; gap: 8px; align-items: center; }
-.col { display: flex; flex-direction: column; gap: 6px; }
-.seek { width: 120px; }
-.accountBox { border: 1px dashed var(--accent); padding: 8px; }
-.pluginRow { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(15,255,15,0.05); }
-.pluginActions { display: flex; gap: 6px; }
-.note { color: var(--muted); font-size: 13px; }
-.footer { font-size: 12px; color: var(--muted); text-align: center; padding: 6px 0; }
+:root{
+  --bg:#081018;
+  --panel:#060606;
+  --accent:#27e06f;
+  --muted:#7a7a7a;
+  --glass: rgba(255,255,255,0.03);
+  --radius:14px;
+  --mono: "Courier New", monospace;
+}
+html,body{height:100%;margin:0;font-family:var(--mono);background:var(--bg);color:var(--accent);}
+.container{display:flex;height:100vh;overflow:hidden;}
+/* Sidebar */
+.sidebar{
+  width:300px;
+  background:linear-gradient(180deg,#081318 0%, #041018 100%);
+  border-right:1px solid rgba(39,224,111,0.06);
+  padding:18px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.brand{font-size:20px;padding:10px 6px;border-radius:10px;background:linear-gradient(90deg,rgba(39,224,111,0.04),transparent);margin-bottom:6px;}
+.nav-section{margin-top:6px;}
+.nav-title{font-weight:700;cursor:pointer;padding:8px;border-radius:8px;color:var(--accent);display:flex;justify-content:space-between;align-items:center;}
+.nav-list{margin-top:6px;display:none;flex-direction:column;gap:6px;max-height:40vh;overflow:auto;padding-left:6px;}
+.nav-item{padding:8px;border-radius:8px;cursor:pointer;color:var(--accent);background:transparent;}
+.nav-item:hover{background:rgba(39,224,111,0.03);text-decoration:underline;}
+.small{font-size:13px;color:var(--muted);}
+.note{color:var(--muted);font-size:12px;padding-top:6px;}
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.header{
+  height:74px;padding:12px 18px;box-sizing:border-box;
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);
+  border-bottom:1px solid rgba(39,224,111,0.03);
+}
+.header-left{display:flex;gap:12px;align-items:center;}
+.server-name{font-weight:700;font-size:18px;}
+.status{font-size:13px;color:var(--muted);}
+.header-right{display:flex;gap:8px;align-items:center;}
+.btn{background:transparent;border:1px solid rgba(39,224,111,0.12);padding:8px 12px;border-radius:10px;color:var(--accent);cursor:pointer;}
+.btn:hover{background:rgba(39,224,111,0.02);}
+/* Content area */
+.content{display:flex;gap:12px;padding:14px;box-sizing:border-box;height:calc(100% - 74px);overflow:hidden;}
+.column{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:var(--radius);padding:12px;box-sizing:border-box;overflow:auto;border:1px solid rgba(39,224,111,0.03);}
+.left{width:58%;display:flex;flex-direction:column;gap:12px;}
+.right{flex:1;display:flex;flex-direction:column;gap:12px;}
+.panel-title{font-weight:700;margin-bottom:8px;}
+.console{height:260px;background:#000;border-radius:10px;padding:10px;border:1px solid rgba(39,224,111,0.06);overflow:auto;color:var(--accent);}
+.input{width:100%;padding:10px;margin-top:8px;background:#000;border:1px solid rgba(39,224,111,0.06);border-radius:8px;color:var(--accent);box-sizing:border-box;}
+.file-editor{min-height:220px;background:#000;padding:10px;border-radius:10px;border:1px solid rgba(39,224,111,0.06);color:var(--accent);white-space:pre-wrap;overflow:auto;}
+.controls-row{display:flex;gap:8px;margin-top:8px;align-items:center;}
+.account-box{border:1px dashed rgba(39,224,111,0.06);padding:10px;border-radius:10px;}
+.plugin-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(39,224,111,0.02);}
+.plugin-actions{display:flex;gap:6px;}
+.subdomain-list{max-height:160px;overflow:auto;padding:8px;background:#000;border-radius:8px;border:1px solid rgba(39,224,111,0.03);}
+/* background fox pattern */
+.bg-fox{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.14;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255,140,60,0.02), transparent 8%),
+    radial-gradient(circle at 80% 70%, rgba(255,110,60,0.02), transparent 8%),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="%23222811"/><stop offset="1" stop-color="%23040402"/></linearGradient></defs><rect width="100%" height="100%" fill="transparent"/><g transform="translate(400,240) scale(1.3)"><g fill="%23ff7f3f"><path d="M-140,-20 C-120,-140 120,-140 140,-20 C120,-60 20,-80 -20,-40 C-60,-80 -140,-60 -140,-20 Z"/></g><g fill="%23ffac66" transform="translate(0,40)"><path d="M-120,-20 C-90,30 90,30 120,-20 C90,10 10,10 -10,-10 C-30,10 -90,10 -120,-20 Z"/></g><g fill="%23000000" opacity="0.25"><circle cx="-40" cy="-10" r="8"/><circle cx="40" cy="-10" r="8"/></g></g></svg>');
+  background-repeat:repeat; background-size:40% 40%;
+  mix-blend-mode:overlay;
+}
+/* small screens */
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .left{width:100%;}
+  .content{flex-direction:column;height:calc(100% - 74px);overflow:auto;}
+}
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="sidebar" id="sidebar">
+<div class="bg-fox"></div>
+<div class="container">
+  <aside class="sidebar" aria-label="sidebar">
     <div class="brand">Foxy Host</div>
 
-    <div class="section">
-      <div class="sectionTitle" data-target="filesList">Files <span class="badge">explore server files</span></div>
-      <div class="list" id="filesList">
-        <div class="item" onclick="openFile('server.properties')">server.properties</div>
-        <div class="item" onclick="openFile('plugins.yml')">plugins.yml</div>
-        <div class="item" onclick="openFile('whitelist.json')">whitelist.json</div>
-        <div class="item" onclick="openFile('ops.json')">ops.json</div>
-        <div class="item" onclick="openFile('world/level.dat')">world/level.dat</div>
-        <div class="item" onclick="openFile('logs/latest.log')">logs/latest.log</div>
+    <div class="nav-section">
+      <div class="nav-title" data-target="filesList">Fișiere <span class="small">explore</span></div>
+      <div id="filesList" class="nav-list"></div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title" data-target="pluginsList">Pluginuri <span class="small">manage</span></div>
+      <div id="pluginsList" class="nav-list"></div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title" data-target="accountList">Cont <span class="small">profile</span></div>
+      <div id="accountList" class="nav-list">
+        <div class="nav-item" onclick="showAccountPanel()">Profil</div>
+        <div class="nav-item" onclick="showCreditsPanel()">Credite</div>
+        <div class="nav-item" onclick="showSubsPanel()">Subdomenii</div>
       </div>
     </div>
 
-    <div class="section">
-      <div class="sectionTitle" data-target="pluginsList">Plugins <span class="badge">manage plugins</span></div>
-      <div class="list" id="pluginsList">
-        <div class="item" onclick="openPlugin('Essentials')">Essentials</div>
-        <div class="item" onclick="openPlugin('LuckPerms')">LuckPerms</div>
-        <div class="item" onclick="openPlugin('WorldEdit')">WorldEdit</div>
-        <div class="item" onclick="openPlugin('Geyser')">Geyser</div>
-        <div class="item" onclick="openPlugin('Vault')">Vault</div>
-        <div class="item" onclick="openPlugin('Dynmap')">Dynmap</div>
+    <div class="nav-section">
+      <div class="nav-title" data-target="toolsList">Unelte <span class="small">backup,logs</span></div>
+      <div id="toolsList" class="nav-list">
+        <div class="nav-item" onclick="openBackup()">Backup</div>
+        <div class="nav-item" onclick="openLogs()">Logs</div>
+        <div class="nav-item" onclick="openHelp()">Ajutor</div>
       </div>
     </div>
 
-    <div class="section">
-      <div class="sectionTitle" data-target="accountList">Account <span class="badge">user tools</span></div>
-      <div class="list" id="accountList">
-        <div class="item" onclick="showAccount()">Profile</div>
-        <div class="item" onclick="showCredits()">Credits</div>
-        <div class="item" onclick="showSubscriptions()">Subscriptions</div>
-        <div class="item" onclick="showBilling()">Billing</div>
+    <div class="note">Panel demo. Toate funcțiile rulează local în browser.</div>
+  </aside>
+
+  <main class="main" role="main">
+    <header class="header">
+      <div class="header-left">
+        <div class="server-name">Foxy-1</div>
+        <div class="status" id="serverStatus">offline</div>
       </div>
-    </div>
-
-    <div class="section">
-      <div class="sectionTitle" data-target="subdomainsList">Subdomains <span class="badge">buy and map</span></div>
-      <div class="list" id="subdomainsList">
-        <div class="item" onclick="openSubdomainManager()">Manage subdomains</div>
-        <div class="item" onclick="openMapping()">Map ip or change port</div>
-        <div class="item" onclick="viewMappings()">View all mappings</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="sectionTitle" data-target="toolsList">Tools <span class="badge">backups, tasks</span></div>
-      <div class="list" id="toolsList">
-        <div class="item" onclick="openBackup()">Backups</div>
-        <div class="item" onclick="openScheduler()">Scheduler</div>
-        <div class="item" onclick="openLogs()">Server logs</div>
-        <div class="item" onclick="openHelp()">Help</div>
-      </div>
-    </div>
-
-    <div style="margin-top:12px;" class="note">Tip: Click section title to expand</div>
-
-  </div>
-
-  <div class="content">
-    <div class="topbar">
-      <div class="row">
-        <div class="small">Server: <strong id="serverName">Foxy-1</strong></div>
-        <div style="width:12px"></div>
-        <div class="note">Status: <span id="serverStatus">offline</span></div>
-      </div>
-      <div class="controls">
+      <div class="header-right">
         <button class="btn" onclick="serverAction('start')">Start</button>
         <button class="btn" onclick="serverAction('stop')">Stop</button>
         <button class="btn" onclick="serverAction('restart')">Restart</button>
       </div>
-    </div>
+    </header>
 
-    <div class="main">
-      <div class="leftCol">
-
+    <section class="content">
+      <div class="left column">
         <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div>Console</div>
-            <div class="note">Live</div>
-          </div>
-          <div id="console" class="console"></div>
-          <input id="consoleInput" class="input" placeholder="tasteaza comanda si apasa enter" onkeydown="consoleKey(event)">
+          <div class="panel-title">Consolă</div>
+          <div id="console" class="console" aria-live="polite"></div>
+          <input id="consoleInput" class="input" placeholder="tastează o comandă, apasă Enter" onkeydown="consoleKey(event)">
         </div>
 
         <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div>File editor</div>
-            <div class="note">editeaza si salveaza local</div>
-          </div>
-          <div id="currentFile" class="note">Niciun fisier selectat</div>
-          <div id="editor" class="editor" contenteditable="true">Selecteaza un fisier sau creeaza unul nou</div>
-          <div style="margin-top:8px;display:flex;gap:8px;">
-            <button class="btn" onclick="saveFile()">Save</button>
-            <button class="btn" onclick="downloadFile()">Download</button>
-            <button class="btn" onclick="createFile()">New file</button>
-            <button class="btn" onclick="deleteFile()">Delete</button>
+          <div class="panel-title">Editor fișier</div>
+          <div id="currentFile" class="small">Niciun fișier selectat</div>
+          <div id="editor" class="file-editor" contenteditable="true">Selectează un fișier din bara din stânga.</div>
+          <div class="controls-row">
+            <button class="btn" onclick="saveFile()">Salvează</button>
+            <button class="btn" onclick="downloadFile()">Descarcă</button>
+            <button class="btn" onclick="createFile()">Creează</button>
+            <button class="btn" onclick="deleteFile()">Șterge</button>
           </div>
         </div>
-
       </div>
 
-      <div class="rightCol">
-
+      <aside class="right column">
         <div class="panel">
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div>Plugins</div>
-            <div class="note">install, update, toggle</div>
+            <div class="panel-title">Pluginuri</div>
+            <div class="small">instalează, activează</div>
           </div>
-          <div id="pluginsPanel">
-            <!-- plugin rows inserted here -->
-          </div>
+          <div id="pluginsPanel"></div>
           <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
-            <input id="uploadPluginInput" type="text" placeholder="plugin name" class="input seek">
-            <button class="btn" onclick="installPlugin()">Install</button>
+            <input id="pluginName" class="input" placeholder="Nume plugin" style="width:60%;">
+            <button class="btn" onclick="installPlugin()">Instalează</button>
             <button class="btn" onclick="scanPlugins()">Scan</button>
           </div>
         </div>
 
         <div class="panel">
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div>Account</div>
-            <div class="note">manage credits</div>
+            <div class="panel-title">Cont</div>
+            <div class="small">gestionează credite</div>
           </div>
-          <div class="accountBox">
-            <div>Username: <strong id="acctName">guest</strong></div>
-            <div>Credits: <strong id="acctCredits">100</strong></div>
+          <div class="account-box">
+            <div>Utilizator: <strong id="acctName">guest</strong></div>
+            <div>Credite: <strong id="acctCredits">0</strong></div>
+
             <div style="margin-top:8px;display:flex;gap:8px;">
-              <input id="addCreditsInput" placeholder="amount" class="input seek">
-              <button class="btn" onclick="addCredits()">Add</button>
-              <button class="btn" onclick="buyCredits()">Buy</button>
+              <input id="addCredits" class="input" placeholder="sumă" style="width:60px">
+              <button class="btn" onclick="addCredits()">Adaugă</button>
+              <button class="btn" onclick="buyCredits()">Cumpără</button>
             </div>
+
             <div style="margin-top:8px;">
-              <button class="btn" onclick="openSubdomainManager()">Manage subdomains</button>
-              <button class="btn" onclick="openBackup()">Backups</button>
+              <button class="btn" onclick="openSubdomainManager()">Manager subdomenii</button>
+              <button class="btn" onclick="openBackup()">Backup-uri</button>
             </div>
           </div>
         </div>
 
         <div class="panel">
-          <div>Subdomain manager</div>
-          <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
-            <input id="subInput" placeholder="nume subdomeniu" class="input" style="width:180px">
-            <select id="subType" class="input" style="width:140px">
+          <div class="panel-title">Manager subdomenii</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input id="subName" class="input" placeholder="nume subdomeniu" style="width:120px">
+            <select id="subType" class="input" style="width:120px">
               <option value="root">nume.ro</option>
               <option value="mc">mc.nume.ro</option>
             </select>
-            <input id="subIp" placeholder="ip:port" class="input seek" style="width:160px">
-            <button class="btn" onclick="purchaseSubdomain()">Purchase</button>
+            <input id="subTarget" class="input" placeholder="ip:port" style="width:140px">
+            <button class="btn" onclick="purchaseSubdomain()">Cumpără</button>
           </div>
-          <div id="subList" style="margin-top:8px;max-height:160px;overflow:auto;background:#000;padding:6px;border:1px solid var(--accent);"></div>
+          <div id="subList" class="subdomain-list" style="margin-top:8px"></div>
         </div>
-
-      </div>
-
-    </div>
-
-    <div class="footer">Foxy Host panel, demo local, features simulated</div>
-  </div>
+      </aside>
+    </section>
+  </main>
 </div>
 
 <script>
-// Utility and storage
+/* State local */
 const state = {
   files: {},
   plugins: {},
@@ -214,143 +220,191 @@ const state = {
   server: { status: 'offline', players: 0 }
 };
 
-// Init demo content
-function seed() {
-  state.files['server.properties'] = 'motd=Foxy Server\nmax-players=20\nserver-ip=127.0.0.1\nserver-port=25565';
+/* Helpers */
+function saveState(){ localStorage.setItem('foxy_state', JSON.stringify(state)); }
+function loadState(){ const s = localStorage.getItem('foxy_state'); if(s){ try{ const parsed = JSON.parse(s); Object.assign(state, parsed); } catch(e){ console.error(e); } } }
+
+/* Seed initial */
+function seed(){
+  state.files['server.properties'] = 'motd=Foxy Server\\nmax-players=20\\nserver-ip=127.0.0.1\\nserver-port=25565';
   state.files['whitelist.json'] = JSON.stringify([{ name: 'player1' }], null, 2);
   state.files['ops.json'] = JSON.stringify([{ uuid: '0000', name: 'admin' }], null, 2);
-  state.files['logs/latest.log'] = '2025-01-01 Server start\n2025-01-02 Backup created';
+  state.files['logs/latest.log'] = '2025-01-01 Server start\\n2025-01-02 Backup creat';
   state.plugins = {
     'Essentials': { enabled: true, version: '2.18.1' },
     'LuckPerms': { enabled: true, version: '5.3' },
     'WorldEdit': { enabled: false, version: '7.2.0' }
   };
-  state.subdomains['guest'] = { type: 'root', target: '127.0.0.1:25565', purchased: true };
-  renderPlugins();
-  renderSubList();
+  state.subdomains['guest'] = { type: 'root', target: '127.0.0.1:25565', created: new Date().toISOString() };
   saveState();
 }
 
-function saveState() { localStorage.setItem('foxy_state', JSON.stringify(state)); }
-function loadState() { const s = localStorage.getItem('foxy_state'); if(s) Object.assign(state, JSON.parse(s)); }
-
-// Sidebar toggle
-document.querySelectorAll('.sectionTitle').forEach(el => {
-  el.addEventListener('click', () => {
-    const id = el.getAttribute('data-target');
-    const list = document.getElementById(id);
-    list.style.display = list.style.display === 'block' ? 'none' : 'block';
+/* Render sidebar lists */
+function renderFiles(){
+  const filesList = document.getElementById('filesList'); filesList.innerHTML = '';
+  Object.keys(state.files).sort().forEach(name=>{
+    const el = document.createElement('div'); el.className='nav-item'; el.textContent = name;
+    el.onclick = ()=>openFile(name);
+    filesList.appendChild(el);
   });
-});
+}
+function renderPluginsList(){
+  const pluginsList = document.getElementById('pluginsList'); pluginsList.innerHTML = '';
+  Object.keys(state.plugins).sort().forEach(name=>{
+    const el = document.createElement('div'); el.className='nav-item'; el.textContent = name + (state.plugins[name].enabled ? ' (on)' : ' (off)');
+    el.onclick = ()=>openPlugin(name);
+    pluginsList.appendChild(el);
+  });
+}
 
-// Console
+/* Console */
 const consoleEl = document.getElementById('console');
-function logConsole(t) { const d = document.createElement('div'); d.textContent = '['+ new Date().toLocaleTimeString()+'] ' + t; consoleEl.appendChild(d); consoleEl.scrollTop = consoleEl.scrollHeight; }
-function consoleKey(e) { if(e.key === 'Enter') { const v = e.target.value.trim(); if(!v) return; logConsole('> ' + v); handleCommand(v); e.target.value = ''; } }
-function handleCommand(cmd) {
+function logConsole(text){
+  const line = document.createElement('div'); line.textContent = '['+ new Date().toLocaleTimeString() +'] ' + text;
+  consoleEl.appendChild(line); consoleEl.scrollTop = consoleEl.scrollHeight;
+}
+function consoleKey(e){ if(e.key === 'Enter'){ const v = e.target.value.trim(); if(!v) return; logConsole('> ' + v); handleCommand(v); e.target.value=''; } }
+function handleCommand(cmd){
   if(cmd === 'start') serverAction('start');
   else if(cmd === 'stop') serverAction('stop');
-  else if(cmd === 'status') logConsole('Server status: ' + state.server.status);
-  else if(cmd === 'plugins') logConsole('Plugins: ' + Object.keys(state.plugins).join(', '));
-  else logConsole('Unknown command');
+  else if(cmd === 'status') logConsole('Status: ' + state.server.status);
+  else if(cmd === 'plugins') logConsole('Pluginuri: ' + Object.keys(state.plugins).join(', '));
+  else logConsole('Comandă necunoscută');
 }
 
-// Server actions
-function serverAction(action) {
-  if(action === 'start') { state.server.status = 'online'; document.getElementById('serverStatus').textContent = 'online'; logConsole('Server started'); }
-  if(action === 'stop') { state.server.status = 'offline'; document.getElementById('serverStatus').textContent = 'offline'; logConsole('Server stopped'); }
-  if(action === 'restart') { logConsole('Restarting'); state.server.status = 'online'; document.getElementById('serverStatus').textContent = 'online'; }
+/* Server actions */
+function serverAction(action){
+  if(action === 'start'){ state.server.status='online'; document.getElementById('serverStatus').textContent='online'; logConsole('Server pornit'); }
+  if(action === 'stop'){ state.server.status='offline'; document.getElementById('serverStatus').textContent='offline'; logConsole('Server oprit'); }
+  if(action === 'restart'){ logConsole('Server repornire'); state.server.status='online'; document.getElementById('serverStatus').textContent='online'; }
   saveState();
 }
 
-// Files
+/* Files editor */
 let currentFile = null;
-function openFile(name) { currentFile = name; document.getElementById('currentFile').textContent = name; const editor = document.getElementById('editor'); editor.textContent = state.files[name] || ''; }
-function saveFile() { if(!currentFile) { alert('Select a file first'); return; } const editor = document.getElementById('editor'); state.files[currentFile] = editor.textContent; logConsole('File saved: ' + currentFile); saveState(); renderFiles(); }
-function downloadFile() { if(!currentFile) { alert('Select a file first'); return; } const blob = new Blob([state.files[currentFile] || ''], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = currentFile.replace(/\//g,'_'); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
-function createFile() { const name = prompt('Nume fisier nou'); if(!name) return; state.files[name] = ''; openFile(name); saveState(); renderFiles(); }
-function deleteFile() { if(!currentFile) return; if(!confirm('Delete ' + currentFile + '?')) return; delete state.files[currentFile]; currentFile = null; document.getElementById('currentFile').textContent = 'Niciun fisier selectat'; document.getElementById('editor').textContent = ''; renderFiles(); saveState(); }
-
-function renderFiles() {
-  const filesList = document.getElementById('filesList');
-  filesList.innerHTML = '';
-  Object.keys(state.files).forEach(k => {
-    const el = document.createElement('div'); el.className = 'item'; el.textContent = k; el.onclick = () => openFile(k); filesList.appendChild(el);
-  });
+function openFile(name){
+  currentFile = name; document.getElementById('currentFile').textContent = name;
+  const ed = document.getElementById('editor'); ed.textContent = state.files[name] || '';
+}
+function saveFile(){
+  if(!currentFile){ alert('Selectează un fișier'); return; }
+  const ed = document.getElementById('editor'); state.files[currentFile] = ed.textContent;
+  logConsole('Fișier salvat: ' + currentFile); saveState(); renderFiles();
+}
+function downloadFile(){
+  if(!currentFile){ alert('Selectează un fișier'); return; }
+  const data = state.files[currentFile] || '';
+  const blob = new Blob([data], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = currentFile.replace(/\//g,'_'); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+function createFile(){
+  const name = prompt('Nume fișier nou'); if(!name) return;
+  if(state.files[name]){ alert('Fișierul există'); return; }
+  state.files[name] = ''; saveState(); renderFiles(); openFile(name);
+}
+function deleteFile(){
+  if(!currentFile) return alert('Niciun fișier selectat');
+  if(!confirm('Ștergi ' + currentFile + '?')) return;
+  delete state.files[currentFile]; currentFile = null; document.getElementById('currentFile').textContent = 'Niciun fișier selectat';
+  document.getElementById('editor').textContent = ''; saveState(); renderFiles();
 }
 
-// Plugins
-function renderPlugins() {
+/* Plugins */
+function renderPluginsPanel(){
   const p = document.getElementById('pluginsPanel'); p.innerHTML = '';
-  Object.keys(state.plugins).forEach(name => {
-    const row = document.createElement('div'); row.className = 'pluginRow';
-    const left = document.createElement('div'); left.innerHTML = '<strong>'+name+'</strong> <span class="note">v'+state.plugins[name].version+'</span>';
-    const actions = document.createElement('div'); actions.className = 'pluginActions';
-    const toggle = document.createElement('button'); toggle.className = 'btn'; toggle.textContent = state.plugins[name].enabled ? 'Disable' : 'Enable'; toggle.onclick = () => { state.plugins[name].enabled = !state.plugins[name].enabled; renderPlugins(); saveState(); };
-    const del = document.createElement('button'); del.className = 'btn'; del.textContent = 'Remove'; del.onclick = () => { if(confirm('Remove ' + name + '?')) { delete state.plugins[name]; renderPlugins(); saveState(); } };
-    actions.appendChild(toggle); actions.appendChild(del);
+  Object.keys(state.plugins).forEach(name=>{
+    const row = document.createElement('div'); row.className='plugin-row';
+    const left = document.createElement('div'); left.innerHTML = '<strong>'+name+'</strong> <span class="small">v'+state.plugins[name].version+'</span>';
+    const actions = document.createElement('div'); actions.className='plugin-actions';
+    const toggle = document.createElement('button'); toggle.className='btn'; toggle.textContent = state.plugins[name].enabled ? 'Disable' : 'Enable';
+    toggle.onclick = ()=>{ state.plugins[name].enabled = !state.plugins[name].enabled; renderPluginsPanel(); renderPluginsList(); saveState(); logConsole('Toggle plugin: ' + name); };
+    const remove = document.createElement('button'); remove.className='btn'; remove.textContent='Remove';
+    remove.onclick = ()=>{ if(confirm('Remove ' + name + '?')){ delete state.plugins[name]; renderPluginsPanel(); renderPluginsList(); saveState(); logConsole('Removed plugin: ' + name); } };
+    actions.appendChild(toggle); actions.appendChild(remove);
     row.appendChild(left); row.appendChild(actions); p.appendChild(row);
   });
 }
-
-function installPlugin() {
-  const name = document.getElementById('uploadPluginInput').value.trim(); if(!name) return alert('Enter plugin name');
-  state.plugins[name] = { enabled: true, version: '1.0.0' }; renderPlugins(); logConsole('Plugin installed: ' + name); saveState();
+function installPlugin(){
+  const name = (document.getElementById('pluginName').value || '').trim(); if(!name) return alert('Scrie numele pluginului');
+  if(state.plugins[name]) return alert('Pluginul există');
+  state.plugins[name] = { enabled: true, version: '1.0.0' }; renderPluginsPanel(); renderPluginsList(); saveState(); logConsole('Installed ' + name);
 }
-function scanPlugins() { renderPlugins(); logConsole('Plugin scan complete'); }
+function scanPlugins(){ renderPluginsPanel(); logConsole('Scan complete'); }
 
-// Account and credits
-function showAccount() { alert('User: ' + state.account.name + '\nCredits: ' + state.account.credits); }
-function showCredits() { alert('Credits: ' + state.account.credits); }
-function addCredits() { const v = parseInt(document.getElementById('addCreditsInput').value || '0',10); if(isNaN(v) || v <= 0) return alert('Invalid amount'); state.account.credits += v; document.getElementById('acctCredits').textContent = state.account.credits; logConsole('Added credits: ' + v); saveState(); }
-function buyCredits() { const v = prompt('Buy credits amount'); const n = parseInt(v,10); if(isNaN(n) || n <= 0) return; state.account.credits += n; document.getElementById('acctCredits').textContent = state.account.credits; logConsole('Purchased credits: ' + n); saveState(); }
+/* Account credits */
+function addCredits(){
+  const v = parseInt(document.getElementById('addCredits').value || '0',10); if(isNaN(v) || v <= 0) return alert('Sumă invalidă');
+  state.account.credits += v; document.getElementById('acctCredits').textContent = state.account.credits; saveState(); logConsole('Added credits: ' + v);
+}
+function buyCredits(){
+  const v = parseInt(prompt('Câte credite cumperi?'),10); if(isNaN(v) || v <= 0) return;
+  state.account.credits += v; document.getElementById('acctCredits').textContent = state.account.credits; saveState(); logConsole('Purchased credits: ' + v);
+}
 
-// Subdomains
-function purchaseSubdomain() {
-  const name = document.getElementById('subInput').value.trim(); if(!name) return alert('Enter name');
+/* Subdomains */
+function purchaseSubdomain(){
+  const name = (document.getElementById('subName').value || '').trim(); if(!name) return alert('Scrie un nume');
   const type = document.getElementById('subType').value;
-  const ip = document.getElementById('subIp').value.trim(); if(!ip) return alert('Enter ip:port');
+  const target = (document.getElementById('subTarget').value || '').trim(); if(!target) return alert('Scrie ip:port');
   const cost = 20 + (type === 'mc' ? 10 : 0);
-  if(state.account.credits < cost) return alert('Not enough credits, cost: ' + cost);
-  if(state.subdomains[name]) return alert('Subdomain already exists');
-  state.account.credits -= cost;
-  state.subdomains[name] = { type, target: ip, purchased: true, created: new Date().toISOString() };
+  if(state.account.credits < cost) return alert('Credite insuficiente, cost: ' + cost);
+  if(state.subdomains[name]) return alert('Subdomeniu deja luat');
+  state.account.credits -= cost; state.subdomains[name] = { type, target, created: new Date().toISOString() };
   document.getElementById('acctCredits').textContent = state.account.credits;
-  logConsole('Purchased subdomain: ' + name + ' as ' + (type === 'mc' ? 'mc.'+name+'.ro' : name+'.ro'));
-  renderSubList();
-  saveState();
+  saveState(); renderSubdomains(); logConsole('Purchased subdomain: ' + (type==='mc' ? 'mc.'+name+'.ro' : name+'.ro') + ' -> ' + target);
 }
-
-function renderSubList() {
+function renderSubdomains(){
   const el = document.getElementById('subList'); el.innerHTML = '';
-  Object.keys(state.subdomains).forEach(k => {
+  Object.keys(state.subdomains).forEach(k=>{
     const s = state.subdomains[k];
-    const row = document.createElement('div'); row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.padding = '6px 0';
-    const left = document.createElement('div'); left.textContent = (s.type === 'mc' ? 'mc.'+k+'.ro' : k+'.ro') + ' -> ' + s.target;
+    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='6px 0';
+    const left = document.createElement('div'); left.textContent = (s.type==='mc' ? 'mc.'+k+'.ro' : k+'.ro') + ' → ' + s.target;
     const right = document.createElement('div');
-    const btn = document.createElement('button'); btn.className = 'btn'; btn.textContent = 'Edit'; btn.onclick = () => { const newip = prompt('Target ip:port', s.target); if(newip) { s.target = newip; saveState(); renderSubList(); logConsole('Updated mapping for ' + k); } };
-    const del = document.createElement('button'); del.className = 'btn'; del.textContent = 'Remove'; del.onclick = () => { if(confirm('Remove ' + k + '?')) { delete state.subdomains[k]; saveState(); renderSubList(); } };
-    right.appendChild(btn); right.appendChild(del);
-    row.appendChild(left); row.appendChild(right); el.appendChild(row);
+    const edit = document.createElement('button'); edit.className='btn'; edit.textContent='Edit'; edit.onclick = ()=>{ const newt = prompt('New target ip:port', s.target); if(newt){ s.target=newt; saveState(); renderSubdomains(); logConsole('Updated mapping for '+k); } };
+    const remove = document.createElement('button'); remove.className='btn'; remove.textContent='Remove'; remove.onclick = ()=>{ if(confirm('Remove ' + k + '?')){ delete state.subdomains[k]; saveState(); renderSubdomains(); logConsole('Removed mapping ' + k); } };
+    right.appendChild(edit); right.appendChild(remove); row.appendChild(left); row.appendChild(right); el.appendChild(row);
   });
 }
 
-function openSubdomainManager() { alert('Open subdomain manager in main panel'); }
-function openMapping() { alert('Map ip or change port from subdomain manager'); }
-function viewMappings() { alert('Mappings count: ' + Object.keys(state.subdomains).length); }
+/* Misc tools */
+function openBackup(){ alert('Backups: ' + Object.keys(state.files).length + ' fișiere'); }
+function openLogs(){ alert('Logs: verifica consola'); }
+function openHelp(){ alert('Acesta este un demo local, acțiunile nu afectează servere reale'); }
 
-// Backups, scheduler, logs
-function openBackup() { alert('Backups: ' + Object.keys(state.files).length + ' files saved'); }
-function openScheduler() { alert('Scheduler opened'); }
-function openLogs() { alert('Logs open'); }
-function openHelp() { alert('Help: This is a local demo panel. Actions are simulated.'); }
+/* Sidebar toggles */
+document.querySelectorAll('.nav-title').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    const target = el.getAttribute('data-target'); const list = document.getElementById(target);
+    list.style.display = list.style.display === 'flex' ? 'none' : 'flex';
+  });
+});
 
-// load or seed initial state
-loadState(); if(!Object.keys(state.files).length) seed(); renderFiles(); renderPlugins(); renderSubList(); document.getElementById('acctCredits').textContent = state.account.credits;
+/* Small panels actions */
+function showAccountPanel(){ alert('Cont: ' + state.account.name + '\\nCredite: ' + state.account.credits); }
+function showCreditsPanel(){ alert('Credite: ' + state.account.credits); }
+function showSubsPanel(){ alert('Subdomenii: ' + Object.keys(state.subdomains).length); }
 
-// Expose some developer helpers
-window.state = state;
+/* Plugin sidebar open */
+function openPlugin(name){ alert('Deschide plugin: ' + name); }
 
+/* File sidebar open */
+function openFileFromSidebar(name){ openFile(name); }
+
+/* Init app */
+function init(){
+  loadState();
+  if(!Object.keys(state.files).length) seed();
+  renderFiles(); renderPluginsList(); renderPluginsPanel(); renderSubdomains();
+  document.getElementById('acctName').textContent = state.account.name;
+  document.getElementById('acctCredits').textContent = state.account.credits;
+  document.getElementById('serverStatus').textContent = state.server.status;
+  logConsole('Panel inițializat');
+}
+init();
+
+/* Expose state for debug */
+window.foxyState = state;
 </script>
 </body>
 </html>
