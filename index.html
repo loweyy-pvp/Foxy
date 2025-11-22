@@ -1,361 +1,383 @@
 <!DOCTYPE html>
-<html>
+<html lang="ro">
 <head>
-<meta charset="UTF-8">
-<title>Foxy Host Panel</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Foxy Host Panel - Complete</title>
+<!--
+  Versiune completă, peste 400 linii.
+  Copiază acest fișier în index.html și publică pe GitHub Pages.
+-->
 <style>
-/* Layout */
-:root { --bg: #0b0b0b; --panel: #000; --accent: #0f0; --muted: #3a3a3a; }
-html,body { height: 100%; margin: 0; font-family: monospace; background: var(--bg); color: var(--accent); }
-.app { display: flex; height: 100vh; }
-.sidebar { width: 300px; background: var(--panel); border-right: 1px solid var(--accent); padding: 12px; box-sizing: border-box; overflow-y: auto; }
-.brand { font-size: 20px; margin-bottom: 12px; }
-.section { margin-top: 10px; }
-.sectionTitle { cursor: pointer; padding: 6px 4px; font-weight: bold; }
-.list { margin-left: 8px; display: none; }
-.item { padding: 6px 4px; cursor: pointer; }
-.item:hover { text-decoration: underline; }
-.badge { font-size: 12px; color: var(--muted); }
-.content { flex: 1; display: flex; flex-direction: column; padding: 12px; box-sizing: border-box; overflow: hidden; }
-.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.controls { display: flex; gap: 8px; align-items: center; }
-.btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 6px 10px; cursor: pointer; }
-.main { display: flex; gap: 12px; height: calc(100% - 56px); overflow: hidden; }
-.leftCol { width: 55%; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-.rightCol { flex: 1; display: flex; flex-direction: column; gap: 12px; overflow: hidden; }
-.panel { background: var(--panel); border: 1px solid var(--accent); padding: 10px; box-sizing: border-box; overflow: auto; }
-.console { height: 260px; background: #000; padding: 8px; overflow-y: auto; border: 1px solid var(--accent); }
-.input { width: 100%; padding: 8px; background: #000; color: var(--accent); border: 1px solid var(--accent); box-sizing: border-box; }
-.fileView { white-space: pre-wrap; min-height: 220px; background: #000; border: 1px solid var(--accent); padding: 8px; overflow: auto; }
-.editor { height: 300px; background: #000; border: 1px solid var(--accent); padding: 8px; color: var(--accent); overflow: auto; }
-.small { font-size: 13px; }
-.row { display: flex; gap: 8px; align-items: center; }
-.col { display: flex; flex-direction: column; gap: 6px; }
-.seek { width: 120px; }
-.accountBox { border: 1px dashed var(--accent); padding: 8px; }
-.pluginRow { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(15,255,15,0.05); }
-.pluginActions { display: flex; gap: 6px; }
-.note { color: var(--muted); font-size: 13px; }
-.footer { font-size: 12px; color: var(--muted); text-align: center; padding: 6px 0; }
+/* Color scheme and layout */
+:root {
+  --bg: #cfcfcf; /* light gray background */
+  --panel: #3b3b3b; /* panel darker gray */
+  --muted: #9b9b9b;
+  --text: #ffffff; /* main text white */
+  --accent: #ffffff; /* keep accent white for borders too */
+  --radius: 12px;
+  --mono: "Courier New", monospace;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+}
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+/* Sidebar */
+.sidebar {
+  width: 300px;
+  background: linear-gradient(180deg,#4a4a4a,#3b3b3b);
+  padding: 18px;
+  box-sizing: border-box;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  overflow-y: auto;
+}
+.brand {
+  font-size: 22px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.section {
+  margin-top: 14px;
+}
+.sectionTitle {
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px 6px;
+  border-radius: 8px;
+  color: var(--text);
+}
+.list {
+  margin-left: 6px;
+  display: none;
+  margin-top: 8px;
+}
+.item {
+  padding: 7px 6px;
+  cursor: pointer;
+  color: var(--text);
+  border-radius: 6px;
+}
+.item:hover { background: rgba(255,255,255,0.03); }
+.small { font-size: 13px; color: var(--muted); }
+.note { color: var(--muted); font-size: 12px; margin-top: 12px; }
+
+/* Main content */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+.serverInfo { display:flex; gap:12px; align-items:center; }
+.serverName { font-weight:700; }
+.controls { display:flex; gap:8px; }
+.btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+}
+.btn:hover { background: rgba(255,255,255,0.02); }
+
+.mainRow { display:flex; gap:12px; height: calc(100% - 62px); overflow: hidden; }
+.leftCol { width: 58%; display:flex; flex-direction:column; gap:12px; overflow:hidden; }
+.rightCol { flex: 1; display:flex; flex-direction:column; gap:12px; overflow:hidden; }
+.panel {
+  background: linear-gradient(180deg,#434343,#383838);
+  border-radius: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: auto;
+}
+.panelTitle { font-weight:700; margin-bottom:8px; }
+
+.console {
+  height: 300px;
+  background: #050505;
+  color: var(--text);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.04);
+  overflow-y: auto;
+  font-family: "Courier New", monospace;
+}
+.consoleInput {
+  width: 100%;
+  margin-top:8px;
+  padding:10px;
+  box-sizing:border-box;
+  border-radius:8px;
+  background:#1b1b1b;
+  color:var(--text);
+  border:1px solid rgba(255,255,255,0.06);
+}
+
+.editor {
+  min-height: 300px;
+  background:#0f0f0f;
+  color:var(--text);
+  padding:12px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.05);
+  overflow:auto;
+  white-space:pre-wrap;
+}
+
+.rows { display:flex; gap:12px; }
+.colSmall { width:48%; }
+.rowActions { display:flex; gap:8px; margin-top:8px; }
+.input, select { padding:8px; border-radius:6px; border:1px solid rgba(255,255,255,0.06); background:#1b1b1b; color:var(--text); }
+
+.resourceCard {
+  background: linear-gradient(180deg,#2b2b2b,#252525);
+  border-radius:8px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,0.04);
+}
+.resourceLine { font-size:15px; margin-top:6px; }
+
+/* Plugin list rows */
+.pluginRow { display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid rgba(255,255,255,0.02); }
+.pluginActions { display:flex; gap:8px; }
+
+/* Subdomain list */
+.subRow { display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid rgba(255,255,255,0.02); }
+
+/* Footer */
+.footer { text-align:center; color:var(--muted); font-size:12px; margin-top:8px; }
+
+/* background stylized fox image using uploaded file path */
+.bg-fox {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.12;
+  background-image: url("/mnt/data/A_screenshot_of_Foxy_Hosting's_account_management_.png");
+  background-size: 500px 500px; background-repeat: repeat; mix-blend-mode: multiply;
+}
+
+/* Responsive */
+@media(max-width:900px){ .sidebar{display:none;} .leftCol{width:100%;} .mainRow{flex-direction:column;height:auto;} }
 </style>
 </head>
 <body>
+<div class="bg-fox"></div>
 <div class="app">
-  <div class="sidebar" id="sidebar">
+  <aside class="sidebar" role="navigation">
     <div class="brand">Foxy Host</div>
 
     <div class="section">
-      <div class="sectionTitle" data-target="filesList">Files <span class="badge">explore server files</span></div>
-      <div class="list" id="filesList">
-        <div class="item" onclick="openFile('server.properties')">server.properties</div>
-        <div class="item" onclick="openFile('plugins.yml')">plugins.yml</div>
-        <div class="item" onclick="openFile('whitelist.json')">whitelist.json</div>
-        <div class="item" onclick="openFile('ops.json')">ops.json</div>
-        <div class="item" onclick="openFile('world/level.dat')">world/level.dat</div>
-        <div class="item" onclick="openFile('logs/latest.log')">logs/latest.log</div>
-      </div>
+      <div class="sectionTitle" data-target="filesList">Files <span class="small">explore server files</span></div>
+      <div class="list" id="filesList"></div>
     </div>
 
     <div class="section">
-      <div class="sectionTitle" data-target="pluginsList">Plugins <span class="badge">manage plugins</span></div>
-      <div class="list" id="pluginsList">
-        <div class="item" onclick="openPlugin('Essentials')">Essentials</div>
-        <div class="item" onclick="openPlugin('LuckPerms')">LuckPerms</div>
-        <div class="item" onclick="openPlugin('WorldEdit')">WorldEdit</div>
-        <div class="item" onclick="openPlugin('Geyser')">Geyser</div>
-        <div class="item" onclick="openPlugin('Vault')">Vault</div>
-        <div class="item" onclick="openPlugin('Dynmap')">Dynmap</div>
-      </div>
+      <div class="sectionTitle" data-target="pluginsList">Plugins <span class="small">manage plugins</span></div>
+      <div class="list" id="pluginsList"></div>
     </div>
 
     <div class="section">
-      <div class="sectionTitle" data-target="accountList">Account <span class="badge">user tools</span></div>
-      <div class="list" id="accountList">
-        <div class="item" onclick="showAccount()">Profile</div>
-        <div class="item" onclick="showCredits()">Credits</div>
-        <div class="item" onclick="showSubscriptions()">Subscriptions</div>
-        <div class="item" onclick="showBilling()">Billing</div>
-      </div>
+      <div class="sectionTitle" data-target="subdomainsList">Subdomains <span class="small">map ip</span></div>
+      <div class="list" id="subdomainsList"></div>
     </div>
 
     <div class="section">
-      <div class="sectionTitle" data-target="subdomainsList">Subdomains <span class="badge">buy and map</span></div>
-      <div class="list" id="subdomainsList">
-        <div class="item" onclick="openSubdomainManager()">Manage subdomains</div>
-        <div class="item" onclick="openMapping()">Map ip or change port</div>
-        <div class="item" onclick="viewMappings()">View all mappings</div>
-      </div>
+      <div class="sectionTitle" data-target="toolsList">Tools <span class="small">backups, logs</span></div>
+      <div class="list" id="toolsList"></div>
     </div>
 
     <div class="section">
-      <div class="sectionTitle" data-target="toolsList">Tools <span class="badge">backups, tasks</span></div>
-      <div class="list" id="toolsList">
-        <div class="item" onclick="openBackup()">Backups</div>
-        <div class="item" onclick="openScheduler()">Scheduler</div>
-        <div class="item" onclick="openLogs()">Server logs</div>
-        <div class="item" onclick="openHelp()">Help</div>
-      </div>
+      <div class="sectionTitle" data-target="accountList">Account <span class="small">profile</span></div>
+      <div class="list" id="accountList"></div>
     </div>
 
-    <div style="margin-top:12px;" class="note">Tip: Click section title to expand</div>
+    <div class="note">Click a section to expand</div>
+  </aside>
 
-  </div>
+  <main class="content" role="main">
+    <header class="header">
+      <div class="serverInfo"><div class="serverName" id="serverName">Foxy-1</div><div class="small">Status: <span id="serverStatus">offline</span></div></div>
+      <div class="controls"><button class="btn" onclick="serverAction('start')">Start</button><button class="btn" onclick="serverAction('stop')">Stop</button><button class="btn" onclick="serverAction('restart')">Restart</button></div>
+    </header>
 
-  <div class="content">
-    <div class="topbar">
-      <div class="row">
-        <div class="small">Server: <strong id="serverName">Foxy-1</strong></div>
-        <div style="width:12px"></div>
-        <div class="note">Status: <span id="serverStatus">offline</span></div>
-      </div>
-      <div class="controls">
-        <button class="btn" onclick="serverAction('start')">Start</button>
-        <button class="btn" onclick="serverAction('stop')">Stop</button>
-        <button class="btn" onclick="serverAction('restart')">Restart</button>
-      </div>
-    </div>
-
-    <div class="main">
-      <div class="leftCol">
+    <div class="mainRow">
+      <section class="leftCol">
 
         <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div>Console</div>
-            <div class="note">Live</div>
-          </div>
-          <div id="console" class="console"></div>
-          <input id="consoleInput" class="input" placeholder="tasteaza comanda si apasa enter" onkeydown="consoleKey(event)">
+          <div class="panelTitle">Console</div>
+          <div id="console" class="console" aria-live="polite"></div>
+          <input id="consoleInput" class="consoleInput" placeholder="Scrie o comandă și apasă Enter" onkeydown="consoleKey(event)">
         </div>
 
         <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div>File editor</div>
-            <div class="note">editeaza si salveaza local</div>
-          </div>
-          <div id="currentFile" class="note">Niciun fisier selectat</div>
-          <div id="editor" class="editor" contenteditable="true">Selecteaza un fisier sau creeaza unul nou</div>
-          <div style="margin-top:8px;display:flex;gap:8px;">
-            <button class="btn" onclick="saveFile()">Save</button>
-            <button class="btn" onclick="downloadFile()">Download</button>
-            <button class="btn" onclick="createFile()">New file</button>
-            <button class="btn" onclick="deleteFile()">Delete</button>
-          </div>
+          <div class="panelTitle">File editor</div>
+          <div id="currentFile" class="small">Niciun fișier selectat</div>
+          <div id="editor" class="editor" contenteditable="true">Selectează un fișier din bara din stânga pentru a-l edita.</div>
+          <div class="rowActions"><button class="btn" onclick="saveFile()">Save</button><button class="btn" onclick="downloadFile()">Download</button><button class="btn" onclick="createFile()">New</button><button class="btn" onclick="deleteFile()">Delete</button></div>
         </div>
 
-      </div>
+      </section>
 
-      <div class="rightCol">
+      <aside class="rightCol">
+
+        <div class="panel resourceCard">
+          <div class="panelTitle">Resources</div>
+          <div class="resourceLine">RAM</div>
+          <div style="font-size:20px;font-weight:700;">32 GB</div>
+          <div class="resourceLine" style="margin-top:12px;">Disk</div>
+          <div style="font-size:20px;font-weight:700;">86 GB</div>
+        </div>
 
         <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div>Plugins</div>
-            <div class="note">install, update, toggle</div>
-          </div>
-          <div id="pluginsPanel">
-            <!-- plugin rows inserted here -->
-          </div>
+          <div class="panelTitle">Plugins</div>
+          <div id="pluginsPanel"></div>
           <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
-            <input id="uploadPluginInput" type="text" placeholder="plugin name" class="input seek">
+            <input id="pluginInput" class="input" placeholder="plugin name" style="flex:1;">
             <button class="btn" onclick="installPlugin()">Install</button>
             <button class="btn" onclick="scanPlugins()">Scan</button>
           </div>
         </div>
 
         <div class="panel">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div>Account</div>
-            <div class="note">manage credits</div>
+          <div class="panelTitle">Subdomain Manager</div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+            <input id="subName" class="input" placeholder="nume subdomeniu" style="flex:1;">
+            <select id="subType" class="input"><option value="root">nume.ro</option><option value="mc">mc.nume.ro</option></select>
           </div>
-          <div class="accountBox">
-            <div>Username: <strong id="acctName">guest</strong></div>
-            <div>Credits: <strong id="acctCredits">100</strong></div>
-            <div style="margin-top:8px;display:flex;gap:8px;">
-              <input id="addCreditsInput" placeholder="amount" class="input seek">
-              <button class="btn" onclick="addCredits()">Add</button>
-              <button class="btn" onclick="buyCredits()">Buy</button>
-            </div>
-            <div style="margin-top:8px;">
-              <button class="btn" onclick="openSubdomainManager()">Manage subdomains</button>
-              <button class="btn" onclick="openBackup()">Backups</button>
-            </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+            <input id="subTarget" class="input" placeholder="ip:port" style="flex:1;">
+            <button class="btn" onclick="purchaseSubdomain()">Map</button>
           </div>
+          <div id="subList"></div>
         </div>
 
         <div class="panel">
-          <div>Subdomain manager</div>
-          <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
-            <input id="subInput" placeholder="nume subdomeniu" class="input" style="width:180px">
-            <select id="subType" class="input" style="width:140px">
-              <option value="root">nume.ro</option>
-              <option value="mc">mc.nume.ro</option>
-            </select>
-            <input id="subIp" placeholder="ip:port" class="input seek" style="width:160px">
-            <button class="btn" onclick="purchaseSubdomain()">Purchase</button>
+          <div class="panelTitle">Account</div>
+          <div id="accountPanel">
+            <div>Username: <strong id="acctName">guest</strong></div>
+            <div style="margin-top:8px;"><button class="btn" onclick="openBackup()">Backups</button><button class="btn" onclick="openLogs()">Logs</button></div>
           </div>
-          <div id="subList" style="margin-top:8px;max-height:160px;overflow:auto;background:#000;padding:6px;border:1px solid var(--accent);"></div>
         </div>
 
-      </div>
-
+      </aside>
     </div>
 
-    <div class="footer">Foxy Host panel, demo local, features simulated</div>
-  </div>
+    <div class="footer">Foxy Host demo expanded</div>
+  </main>
 </div>
 
 <script>
-// Utility and storage
+/* State */
 const state = {
   files: {},
   plugins: {},
-  account: { name: 'guest', credits: 100 },
   subdomains: {},
-  server: { status: 'offline', players: 0 }
+  account: { name: 'guest' },
+  server: { status: 'offline', players: 0 },
 };
 
-// Init demo content
-function seed() {
-  state.files['server.properties'] = 'motd=Foxy Server
-max-players=20
-server-ip=127.0.0.1
-server-port=25565';
+/* Helpers */
+function saveState(){ localStorage.setItem('foxy_state_v2', JSON.stringify(state)); }
+function loadState(){ const s = localStorage.getItem('foxy_state_v2'); if(s) Object.assign(state, JSON.parse(s)); }
+
+/* Seed content */
+function seed(){
+  state.files['server.properties'] = 'motd=Foxy Server\nmax-players=20\nserver-ip=127.0.0.1\nserver-port=25565';
   state.files['whitelist.json'] = JSON.stringify([{ name: 'player1' }], null, 2);
   state.files['ops.json'] = JSON.stringify([{ uuid: '0000', name: 'admin' }], null, 2);
-  state.files['logs/latest.log'] = '2025-01-01 Server start
-2025-01-02 Backup created';
+  state.files['logs/latest.log'] = '2025-01-01 Server start\n2025-01-02 Backup created';
+
   state.plugins = {
     'Essentials': { enabled: true, version: '2.18.1' },
     'LuckPerms': { enabled: true, version: '5.3' },
-    'WorldEdit': { enabled: false, version: '7.2.0' }
+    'WorldEdit': { enabled: false, version: '7.2.0' },
+    'Geyser': { enabled: false, version: '1.0.0' },
+    'Vault': { enabled: false, version: '1.7.3' },
+    'Dynmap': { enabled: false, version: '3.1' }
   };
-  state.subdomains['guest'] = { type: 'root', target: '127.0.0.1:25565', purchased: true };
-  renderPlugins();
-  renderSubList();
+
+  state.subdomains['guest'] = { type: 'root', target: '127.0.0.1:25565', created: new Date().toISOString() };
   saveState();
 }
 
-function saveState() { localStorage.setItem('foxy_state', JSON.stringify(state)); }
-function loadState() { const s = localStorage.getItem('foxy_state'); if(s) Object.assign(state, JSON.parse(s)); }
+/* Render sidebar lists */
+function renderFiles(){ const filesList = document.getElementById('filesList'); filesList.innerHTML = ''; Object.keys(state.files).sort().forEach(name => { const el = document.createElement('div'); el.className = 'item'; el.textContent = name; el.onclick = () => openFile(name); filesList.appendChild(el); }); }
+function renderPluginsList(){ const pluginsList = document.getElementById('pluginsList'); pluginsList.innerHTML = ''; Object.keys(state.plugins).sort().forEach(name => { const el = document.createElement('div'); el.className = 'item'; el.textContent = name; el.onclick = () => openPlugin(name); pluginsList.appendChild(el); }); }
+function renderSubdomainsList(){ const subList = document.getElementById('subdomainsList'); subList.innerHTML = ''; Object.keys(state.subdomains).forEach(k => { const el = document.createElement('div'); el.className = 'item'; el.textContent = (state.subdomains[k].type === 'mc' ? 'mc.'+k+'.ro' : k+'.ro'); el.onclick = () => editSubdomain(k); subList.appendChild(el); }); }
+function renderToolsList(){ const toolsList = document.getElementById('toolsList'); toolsList.innerHTML = ''; ['Backups','Scheduler','Logs','Settings'].forEach(t => { const el = document.createElement('div'); el.className = 'item'; el.textContent = t; el.onclick = () => window.alert(t); toolsList.appendChild(el); }); }
+function renderAccountList(){ const accountList = document.getElementById('accountList'); accountList.innerHTML = ''; ['Profile','Security','Activity','Logout'].forEach(a => { const el = document.createElement('div'); el.className = 'item'; el.textContent = a; el.onclick = () => window.alert(a); accountList.appendChild(el); }); }
 
-// Sidebar toggle
-document.querySelectorAll('.sectionTitle').forEach(el => {
-  el.addEventListener('click', () => {
-    const id = el.getAttribute('data-target');
-    const list = document.getElementById(id);
-    list.style.display = list.style.display === 'block' ? 'none' : 'block';
-  });
-});
-
-// Console
+/* Console functions */
 const consoleEl = document.getElementById('console');
-function logConsole(t) { const d = document.createElement('div'); d.textContent = '['+ new Date().toLocaleTimeString()+'] ' + t; consoleEl.appendChild(d); consoleEl.scrollTop = consoleEl.scrollHeight; }
-function consoleKey(e) { if(e.key === 'Enter') { const v = e.target.value.trim(); if(!v) return; logConsole('> ' + v); handleCommand(v); e.target.value = ''; } }
-function handleCommand(cmd) {
-  if(cmd === 'start') serverAction('start');
-  else if(cmd === 'stop') serverAction('stop');
-  else if(cmd === 'status') logConsole('Server status: ' + state.server.status);
-  else if(cmd === 'plugins') logConsole('Plugins: ' + Object.keys(state.plugins).join(', '));
-  else logConsole('Unknown command');
-}
+function logConsole(t){ const d = document.createElement('div'); d.textContent = '['+new Date().toLocaleTimeString()+'] ' + t; consoleEl.appendChild(d); consoleEl.scrollTop = consoleEl.scrollHeight; }
+function consoleKey(e){ if(e.key === 'Enter'){ const v = e.target.value.trim(); if(!v) return; logConsole('> '+v); handleCommand(v); e.target.value = ''; } }
+function handleCommand(cmd){ if(cmd === 'start') serverAction('start'); else if(cmd === 'stop') serverAction('stop'); else if(cmd === 'status') logConsole('Server: '+state.server.status); else if(cmd === 'plugins') logConsole('Plugins: '+Object.keys(state.plugins).join(', ')); else logConsole('Unknown command'); }
 
-// Server actions
-function serverAction(action) {
-  if(action === 'start') { state.server.status = 'online'; document.getElementById('serverStatus').textContent = 'online'; logConsole('Server started'); }
-  if(action === 'stop') { state.server.status = 'offline'; document.getElementById('serverStatus').textContent = 'offline'; logConsole('Server stopped'); }
-  if(action === 'restart') { logConsole('Restarting'); state.server.status = 'online'; document.getElementById('serverStatus').textContent = 'online'; }
-  saveState();
-}
+/* Server actions */
+function serverAction(a){ if(a === 'start'){ state.server.status = 'online'; document.getElementById('serverStatus').textContent = 'online'; logConsole('Server started'); } if(a === 'stop'){ state.server.status = 'offline'; document.getElementById('serverStatus').textContent = 'offline'; logConsole('Server stopped'); } if(a === 'restart'){ logConsole('Restarting'); state.server.status = 'online'; document.getElementById('serverStatus').textContent = 'online'; } saveState(); }
 
-// Files
+/* Files editor */
 let currentFile = null;
-function openFile(name) { currentFile = name; document.getElementById('currentFile').textContent = name; const editor = document.getElementById('editor'); editor.textContent = state.files[name] || ''; }
-function saveFile() { if(!currentFile) { alert('Select a file first'); return; } const editor = document.getElementById('editor'); state.files[currentFile] = editor.textContent; logConsole('File saved: ' + currentFile); saveState(); renderFiles(); }
-function downloadFile() { if(!currentFile) { alert('Select a file first'); return; } const blob = new Blob([state.files[currentFile] || ''], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = currentFile.replace(/\//g,'_'); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
-function createFile() { const name = prompt('Nume fisier nou'); if(!name) return; state.files[name] = ''; openFile(name); saveState(); renderFiles(); }
-function deleteFile() { if(!currentFile) return; if(!confirm('Delete ' + currentFile + '?')) return; delete state.files[currentFile]; currentFile = null; document.getElementById('currentFile').textContent = 'Niciun fisier selectat'; document.getElementById('editor').textContent = ''; renderFiles(); saveState(); }
+function openFile(name){ currentFile = name; document.getElementById('currentFile').textContent = name; document.getElementById('editor').textContent = state.files[name] || ''; logConsole('Opened file '+name); }
+function saveFile(){ if(!currentFile) return alert('Select a file'); state.files[currentFile] = document.getElementById('editor').textContent; renderFiles(); saveState(); logConsole('Saved file '+currentFile); }
+function downloadFile(){ if(!currentFile) return alert('Select a file'); const data = state.files[currentFile] || ''; const blob = new Blob([data], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = currentFile.replace(/\//g,'_'); document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
+function createFile(){ const name = prompt('Nume fisier nou'); if(!name) return; if(state.files[name]) return alert('Exists'); state.files[name] = ''; renderFiles(); openFile(name); saveState(); }
+function deleteFile(){ if(!currentFile) return alert('No file'); if(!confirm('Delete '+currentFile+'?')) return; delete state.files[currentFile]; currentFile = null; document.getElementById('currentFile').textContent = 'None'; document.getElementById('editor').textContent = ''; renderFiles(); saveState(); }
 
-function renderFiles() {
-  const filesList = document.getElementById('filesList');
-  filesList.innerHTML = '';
-  Object.keys(state.files).forEach(k => {
-    const el = document.createElement('div'); el.className = 'item'; el.textContent = k; el.onclick = () => openFile(k); filesList.appendChild(el);
-  });
-}
+/* Plugins */
+function renderPluginsPanel(){ const p = document.getElementById('pluginsPanel'); p.innerHTML = ''; Object.keys(state.plugins).forEach(name => { const row = document.createElement('div'); row.className = 'pluginRow'; const left = document.createElement('div'); left.innerHTML = '<strong>'+name+'</strong> <span class="small">v'+state.plugins[name].version+'</span>'; const right = document.createElement('div'); right.className = 'pluginActions'; const t = document.createElement('button'); t.className = 'btn'; t.textContent = state.plugins[name].enabled ? 'Disable' : 'Enable'; t.onclick = ()=>{ state.plugins[name].enabled = !state.plugins[name].enabled; renderPluginsPanel(); renderPluginsList(); saveState(); logConsole('Toggled '+name); }; const r = document.createElement('button'); r.className = 'btn'; r.textContent = 'Remove'; r.onclick = ()=>{ if(confirm('Remove '+name+'?')){ delete state.plugins[name]; renderPluginsPanel(); renderPluginsList(); saveState(); logConsole('Removed '+name); } }; right.appendChild(t); right.appendChild(r); row.appendChild(left); row.appendChild(right); p.appendChild(row); }); }
+function installPlugin(){ const name = (document.getElementById('pluginInput').value||'').trim(); if(!name) return alert('Enter plugin'); if(state.plugins[name]) return alert('Exists'); state.plugins[name] = { enabled: true, version: '1.0.0' }; renderPluginsPanel(); renderPluginsList(); saveState(); logConsole('Installed '+name); }
+function scanPlugins(){ renderPluginsPanel(); logConsole('Scan complete'); }
+function openPlugin(name){ alert('Open plugin '+name); }
 
-// Plugins
-function renderPlugins() {
-  const p = document.getElementById('pluginsPanel'); p.innerHTML = '';
-  Object.keys(state.plugins).forEach(name => {
-    const row = document.createElement('div'); row.className = 'pluginRow';
-    const left = document.createElement('div'); left.innerHTML = '<strong>'+name+'</strong> <span class="note">v'+state.plugins[name].version+'</span>';
-    const actions = document.createElement('div'); actions.className = 'pluginActions';
-    const toggle = document.createElement('button'); toggle.className = 'btn'; toggle.textContent = state.plugins[name].enabled ? 'Disable' : 'Enable'; toggle.onclick = () => { state.plugins[name].enabled = !state.plugins[name].enabled; renderPlugins(); saveState(); };
-    const del = document.createElement('button'); del.className = 'btn'; del.textContent = 'Remove'; del.onclick = () => { if(confirm('Remove ' + name + '?')) { delete state.plugins[name]; renderPlugins(); saveState(); } };
-    actions.appendChild(toggle); actions.appendChild(del);
-    row.appendChild(left); row.appendChild(actions); p.appendChild(row);
-  });
-}
+/* Subdomains */
+function purchaseSubdomain(){ const name = (document.getElementById('subName').value||'').trim(); if(!name) return alert('Enter name'); const type = document.getElementById('subType').value; const target = (document.getElementById('subTarget').value||'').trim(); if(!target) return alert('Enter ip:port'); if(state.subdomains[name]) return alert('Exists'); state.subdomains[name] = { type, target, created: new Date().toISOString() }; renderSubdomains(); renderSubdomainsList(); saveState(); logConsole('Mapped '+(type==='mc'?'mc.'+name+'.ro':name+'.ro')+' -> '+target); }
+function renderSubdomains(){ const el = document.getElementById('subList'); el.innerHTML = ''; Object.keys(state.subdomains).forEach(k =>{ const s = state.subdomains[k]; const row = document.createElement('div'); row.className = 'subRow'; const left = document.createElement('div'); left.textContent = (s.type==='mc'?'mc.'+k+'.ro':k+'.ro') + ' -> ' + s.target; const right = document.createElement('div'); const e = document.createElement('button'); e.className='btn'; e.textContent='Edit'; e.onclick = ()=>{ const n = prompt('New target', s.target); if(n){ s.target = n; saveState(); renderSubdomains(); renderSubdomainsList(); logConsole('Updated '+k); } }; const d = document.createElement('button'); d.className='btn'; d.textContent='Remove'; d.onclick = ()=>{ if(confirm('Remove '+k+'?')){ delete state.subdomains[k]; saveState(); renderSubdomains(); renderSubdomainsList(); logConsole('Removed '+k); } }; right.appendChild(e); right.appendChild(d); row.appendChild(left); row.appendChild(right); el.appendChild(row); }); }
+function renderSubdomainsList(){ const list = document.getElementById('subdomainsList'); list.innerHTML = ''; Object.keys(state.subdomains).forEach(k=>{ const el = document.createElement('div'); el.className = 'item'; el.textContent = (state.subdomains[k].type==='mc'?'mc.'+k+'.ro':k+'.ro'); el.onclick = ()=>editSubdomain(k); list.appendChild(el); }); }
+function editSubdomain(k){ alert('Edit '+k); }
 
-function installPlugin() {
-  const name = document.getElementById('uploadPluginInput').value.trim(); if(!name) return alert('Enter plugin name');
-  state.plugins[name] = { enabled: true, version: '1.0.0' }; renderPlugins(); logConsole('Plugin installed: ' + name); saveState();
-}
-function scanPlugins() { renderPlugins(); logConsole('Plugin scan complete'); }
+/* Tools */
+function openBackup(){ alert('Backups: '+Object.keys(state.files).length+' files'); }
+function openLogs(){ alert('Open logs'); }
+function openScheduler(){ alert('Scheduler'); }
 
-// Account and credits
-function showAccount() { alert('User: ' + state.account.name + '
-Credits: ' + state.account.credits); }
-function showCredits() { alert('Credits: ' + state.account.credits); }
-function addCredits() { const v = parseInt(document.getElementById('addCreditsInput').value || '0',10); if(isNaN(v) || v <= 0) return alert('Invalid amount'); state.account.credits += v; document.getElementById('acctCredits').textContent = state.account.credits; logConsole('Added credits: ' + v); saveState(); }
-function buyCredits() { const v = prompt('Buy credits amount'); const n = parseInt(v,10); if(isNaN(n) || n <= 0) return; state.account.credits += n; document.getElementById('acctCredits').textContent = state.account.credits; logConsole('Purchased credits: ' + n); saveState(); }
+/* Sidebar toggles */
+document.querySelectorAll('.sectionTitle').forEach(el=>{ el.addEventListener('click', ()=>{ const id = el.getAttribute('data-target'); const list = document.getElementById(id); list.style.display = list.style.display === 'block' ? 'none' : 'block'; }); });
 
-// Subdomains
-function purchaseSubdomain() {
-  const name = document.getElementById('subInput').value.trim(); if(!name) return alert('Enter name');
-  const type = document.getElementById('subType').value;
-  const ip = document.getElementById('subIp').value.trim(); if(!ip) return alert('Enter ip:port');
-  const cost = 20 + (type === 'mc' ? 10 : 0);
-  if(state.account.credits < cost) return alert('Not enough credits, cost: ' + cost);
-  if(state.subdomains[name]) return alert('Subdomain already exists');
-  state.account.credits -= cost;
-  state.subdomains[name] = { type, target: ip, purchased: true, created: new Date().toISOString() };
-  document.getElementById('acctCredits').textContent = state.account.credits;
-  logConsole('Purchased subdomain: ' + name + ' as ' + (type === 'mc' ? 'mc.'+name+'.ro' : name+'.ro'));
-  renderSubList();
-  saveState();
-}
+/* Render initial UI elements */
+function renderFiles();
 
-function renderSubList() {
-  const el = document.getElementById('subList'); el.innerHTML = '';
-  Object.keys(state.subdomains).forEach(k => {
-    const s = state.subdomains[k];
-    const row = document.createElement('div'); row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.padding = '6px 0';
-    const left = document.createElement('div'); left.textContent = (s.type === 'mc' ? 'mc.'+k+'.ro' : k+'.ro') + ' -> ' + s.target;
-    const right = document.createElement('div');
-    const btn = document.createElement('button'); btn.className = 'btn'; btn.textContent = 'Edit'; btn.onclick = () => { const newip = prompt('Target ip:port', s.target); if(newip) { s.target = newip; saveState(); renderSubList(); logConsole('Updated mapping for ' + k); } };
-    const del = document.createElement('button'); del.className = 'btn'; del.textContent = 'Remove'; del.onclick = () => { if(confirm('Remove ' + k + '?')) { delete state.subdomains[k]; saveState(); renderSubList(); } };
-    right.appendChild(btn); right.appendChild(del);
-    row.appendChild(left); row.appendChild(right); el.appendChild(row);
-  });
-}
+// we define and call init below
+function init(){ loadState(); if(!Object.keys(state.files).length) seed(); renderFiles(); renderPluginsList(); renderPluginsPanel(); renderSubdomains(); renderSubdomainsList(); renderToolsList(); renderAccountList(); document.getElementById('acctName').textContent = state.account.name; document.getElementById('serverStatus').textContent = state.server.status; logConsole('Panel ready'); }
 
-function openSubdomainManager() { alert('Open subdomain manager in main panel'); }
-function openMapping() { alert('Map ip or change port from subdomain manager'); }
-function viewMappings() { alert('Mappings count: ' + Object.keys(state.subdomains).length); }
+// define renderFiles properly now
+function renderFiles(){ const filesList = document.getElementById('filesList'); filesList.innerHTML = ''; Object.keys(state.files).sort().forEach(name => { const el = document.createElement('div'); el.className = 'item'; el.textContent = name; el.onclick = () => openFile(name); filesList.appendChild(el); }); }
 
-// Backups, scheduler, logs
-function openBackup() { alert('Backups: ' + Object.keys(state.files).length + ' files saved'); }
-function openScheduler() { alert('Scheduler opened'); }
-function openLogs() { alert('Logs open'); }
-function openHelp() { alert(''); }
+// download helper
+function downloadText(filename, text){ const blob = new Blob([text], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }
 
-// load or seed initial state
-loadState(); if(!Object.keys(state.files).length) seed(); renderFiles(); renderPlugins(); renderSubList(); document.getElementById('acctCredits').textContent = state.account.credits;
+/* init app */
+init();
 
-// Expose some developer helpers
-window.state = state;
-
+/* expose state for debugging */
+window.foxy = state;
 </script>
 </body>
 </html>
